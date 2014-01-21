@@ -79,7 +79,7 @@
     UIView* parentView = self.viewController.view;
     parentView.userInteractionEnabled = NO;  // disable user interaction while splashscreen is shown
     _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:topActivityIndicatorStyle];
-    _activityView.center = CGPointMake(parentView.bounds.size.width / 2, parentView.bounds.size.height / 2);
+    //_activityView.center = CGPointMake(parentView.bounds.size.width / 2, parentView.bounds.size.height / 2);
     _activityView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin
         | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     [_activityView startAnimating];
@@ -90,8 +90,18 @@
 
     id showSplashScreenSpinnerValue = [self.commandDelegate.settings objectForKey:[@"ShowSplashScreenSpinner" lowercaseString]];
     // backwards compatibility - if key is missing, default to true
-    if ((showSplashScreenSpinnerValue == nil) || [showSplashScreenSpinnerValue boolValue]) {
-        [parentView addSubview:_activityView];
+    //if ((showSplashScreenSpinnerValue == nil) || [showSplashScreenSpinnerValue boolValue]) {
+    //    [parentView addSubview:_activityView];
+    //}
+
+    //keep it backward compatible - allow to specify the position of the activity indicator
+    if((showSplashScreenSpinnerValue != nil)){
+        if([showSplashScreenSpinnerValue isEqualToString:@"Center"]){
+            _activityView.center = CGPointMake(parentView.bounds.size.width / 2, parentView.bounds.size.height / 2);
+            [parentView addSubview:_activityView];
+        } else if([showSplashScreenSpinnerValue isEqualToString:@"Top"] || [showSplashScreenSpinnerValue boolValue]) {
+            [parentView addSubview:_activityView];
+        }
     }
 
     // Frame is required when launching in portrait mode.
